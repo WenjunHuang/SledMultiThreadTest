@@ -60,20 +60,22 @@ fn do_write_test(db: Arc<Tree>, thread_count: i32) {
 }
 
 fn check_write(db: Arc<Tree>, prefix: i32) {
-    let mut key = vec!(b'0', b'0', b'0', b'0', b'0', b'e', b'n', b'd');// 8 bytes key
+    let key = vec!(b'0', b'0', b'0', b'0', b'0', b'e', b'n', b'd');// 8 bytes key
     let value = vec![b'6'; 4096];
 
     for i in 0..10000 {
-        let mut v = value.clone();
+        let mut k = key.clone();
         for j in 0..4 {
-            key[j] = ((i >> ((4 - j - 1) << 3)) & 0xFF) as u8;
+            k[j] = ((i >> ((4 - j - 1) << 3)) & 0xFF) as u8;
         }
+
+        let mut v = value.clone();
         unsafe {
             let p = v.as_mut_ptr() as *mut i32;
             *p = i as i32;
         }
 
-        let result = db.set(key.clone(), v);
+        let result = db.set(k, v);
         match result {
             Ok(_) => {}
             Err(cause) => {
@@ -85,14 +87,15 @@ fn check_write(db: Arc<Tree>, prefix: i32) {
 }
 
 fn check_read(db: Arc<Tree>, prefix: i32) {
-    let mut key = vec!(b'0', b'0', b'0', b'0', b'0', b'e', b'n', b'd');// 8 bytes key
+    let key = vec!(b'0', b'0', b'0', b'0', b'0', b'e', b'n', b'd');// 8 bytes key
     let suffix = vec![b'6'; 4092];
 
     for i in 0..10000 {
+        let mut k = key.clone();
         for j in 0..4 {
-            key[j] = ((i >> ((4 - j - 1) << 3)) & 0xFF) as u8;
+            k[j] = ((i >> ((4 - j - 1) << 3)) & 0xFF) as u8;
         }
-        let result = db.get(&key);
+        let result = db.get(&k);
         match result {
             Ok(Some(ref pin)) => {
                 let rv = pin.to_vec();

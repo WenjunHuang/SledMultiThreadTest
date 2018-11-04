@@ -1,0 +1,9 @@
+[package]
+name = "SledMultithreadTest"
+version = "0.1.0"
+authors = ["WenjunHuang"]
+edition = "2018"
+
+[dependencies]
+sled = "0.16.2"
+clap = "*"

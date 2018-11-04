@@ -15,7 +15,7 @@ fn main() {
             .short("m")
             .takes_value(true)
             .required(true)
-            .help("Test write only"))
+            .help("test mode"))
         .arg(Arg::with_name("threads").short("t")
             .help("threads count")
             .takes_value(true)
